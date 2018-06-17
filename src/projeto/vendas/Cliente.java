@@ -1,6 +1,11 @@
 package projeto.vendas;
 
-public class Cliente {
+import java.io.Serializable;
+
+@Entity
+public class Cliente implements Serializable {
+    
+    private static final long serialVersionUID= 1L;
 
     public String nome;
 
@@ -9,7 +14,7 @@ public class Cliente {
     public String cidade;
 
     private double limite;
-
+    @Id
     private int id;
 
     public Cliente() {
@@ -56,4 +61,10 @@ public class Cliente {
     public void setId(int id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "nome=" + nome + ", cpfCnpj=" + cpfCnpj + ", cidade=" + cidade + ", limite=" + limite + ", id=" + id + '}';
+    }
+    
 }

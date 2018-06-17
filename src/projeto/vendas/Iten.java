@@ -4,6 +4,7 @@ package projeto.vendas;
 import projeto.vendas.Produto;
 
 public class Iten {
+    static int idclass;
     
     private Pedido pedido;
 
@@ -15,21 +16,23 @@ public class Iten {
 
     public int id;
 
-    public Iten(Produto A, int B) {
+    public Iten(Produto produto, int quantidade) {
         
-        this.produto = A;
-        this.quantidade =B;
+        this.produto = produto;
+        this.quantidade = quantidade;
+        this.preco = produto.getValor()*this.quantidade;
+        this.id = Iten.idclass + 1;
+        Iten.idclass++;
     }
-
-    Iten() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     public void removeIten(){
-        
+        if(pedido.getStatus()==Statuspedido.NovoPedido){
         pedido.getItens().remove(this);
         pedido.setNuItens(pedido.getNuItens()-1);
-        pedido.setValorPedido(pedido.getValorPedido()-this.preco);
+        pedido.setValorPedido(pedido.getValorPedido()-this.preco);}
+        
+        else{
+            throw new UnsupportedOperationException("Operação Invalida")  
+        }
     
     }
 
@@ -37,7 +40,7 @@ public class Iten {
      * @return the preco
      */
     public double getPreco() {
-        return produto.valor * this.getQuantidade();
+        return preco;
     }
 
     /**
@@ -67,4 +70,10 @@ public class Iten {
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
+
+    @Override
+    public String toString() {
+        return "Iten{ produto=" + produto + ", quantidade=" + quantidade + ", preco=" + preco + ", id=" + id + '}';
+    }
+    
 }

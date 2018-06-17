@@ -3,13 +3,17 @@ package projeto.vendas;
 
 import static java.nio.file.Files.list;
 import static java.rmi.Naming.list;
+import java.util.ArrayList;
 import static java.util.Collections.list;
+import java.util.Date;
 import java.util.List;
 import projeto.vendas.Statuspedido;
 
 public class Pedido {
 
     private Cliente cliente;
+    
+    private  Date datPedido;
 
     private Statuspedido status;
 
@@ -25,30 +29,77 @@ public class Pedido {
    /** Constructor**/
     
     public Pedido(Cliente A) {
-        this.cliente = A;  
+        this.cliente = A; 
+        this.status = Statuspedido.NovoPedido;
+        this.datPedido = new Date();
+        this.itens = new ArrayList<>();
     }
     
    /** Methods**/
     
-    public void pagar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void submeter() {
+        
+        if (this.status==Statuspedido.NovoPedido){
+            
+            if(this.valorPedido<=1000.0){
+                
+                if(this.valorPedido<=cliente.getLimite()){
+                    this.status = Statuspedido.Aceito;
+                }
+                else{
+                    throw new UnsupportedOperationException("O cliente não possui limite para efetuar essa compra");   
+                }
+            }
+            else{
+                throw new UnsupportedOperationException("O valor do pedido é superior a 1000 reais "); 
+            }                     
+        }    
+        else {    
+           throw new UnsupportedOperationException("Operaçao invalida");
+        }
     }
 
     public void cancelar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
+        if(this.status!=Statuspedido.Pago){
+            
+            this.status = Statuspedido.Cancelado;
+        } 
+        else{
+           throw new UnsupportedOperationException("Operação inválida.");
+        }
     }
 
-    public void submeter() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void pagar() {
+        
+        if(this.status == Statuspedido.Aceito){
+            
+            this.status = Statuspedido.Pago;
+        }
+        
+        else{
+        throw new UnsupportedOperationException("Operação Invalida");}
     }
 
-    public void adicionaIten() {
-         Iten iten = new Iten();
+    public void adicionaIten(Produto produto, int quantidade) {
+         Iten iten = new Iten(produto,quantidade);
          iten.setPedido(this);
          itens.add(iten);
-         this.setValorPedido(this.valorPedido + iten.getPreco() * iten.);
+         this.setValorPedido(this.valorPedido + iten.getPreco());
          setNuItens(getNuItens() + 1);     
-    }     
+    }   
+    
+    public Iten getItenById(long id){
+        
+        for(Iten iten : this.itens){
+            if(iten.id == id){
+                return iten;
+            }
+        }
+        
+        return null;
+    
+    }
 
     /**
      * @return the nuItens
@@ -76,7 +127,6 @@ public class Pedido {
      */
     public void setValorPedido(double valorPedido) {
         this.valorPedido = valorPedido;
-    }
     }
 
     /**
@@ -119,6 +169,25 @@ public class Pedido {
      */
     public void setItens(List<Iten> itens) {
         this.itens = itens;
+    }
+
+    /**
+     * @return the datPedido
+     */
+    public Date getDatPedido() {
+        return datPedido;
+    }
+
+    /**
+     * @param datPedido the datPedido to set
+     */
+    public void setDatPedido(Date datPedido) {
+        this.datPedido = datPedido;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido{" + "cliente=" + cliente + ", datPedido=" + datPedido + ", status=" + status + ", itens=" + itens + ", nuItens=" + nuItens + ", id=" + id + ", valorPedido=" + valorPedido + '}';
     }
 
     
